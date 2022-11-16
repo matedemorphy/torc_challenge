@@ -1,22 +1,16 @@
-require "./file_reader"
-require "./item"
 require "./purchase"
 
-include FileReader
-
-read_file("input1.txt")
-items = map_file
-items_obj = []
-
-items.each do |item|
-	items_obj.push(Item.new(
-		item[:name], 
-		item[:imported], 
-		item[:tax], 
-		item[:quantity],
-		item[:price]))
+def generate_output(input_number)
+	purchase = Purchase.new(input_number)
+	purchase.generate_receipt_details
 end
 
-purchase = Purchase.new(items_obj)
+def print_outputs
+	puts generate_output(1)
+	puts "------------------------------"
+	puts generate_output(2)
+	puts "------------------------------"
+	puts generate_output(3)
+end
 
-puts purchase.generate_receipt_details
+print_outputs

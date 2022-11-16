@@ -1,4 +1,7 @@
+require "./helper"
+
 class Item
+	include Helper
 	
 	attr_accessor :quantity, :name, :imported, :tax, :price
 	
@@ -10,19 +13,19 @@ class Item
 		@price = price.to_f
 	end
 
-	def calculate_import_duty_tax
-		@imported ? ((@price * 0.05) * @quantity) : 0.0
+	def get_import_duty_tax
+		@imported ? calculate_import_duty_tax(@price, @quantity) : 0.00
 	end
 
-	def calculate_sale_tax
-		@tax ? ((@price * 0.1) * @quantity) : 0.0
+	def get_sale_tax
+		@tax ? calculate_sale_tax(@price, @quantity) : 0.00
 	end
 
-	def calculate_total_tax
-		(calculate_sale_tax + calculate_import_duty_tax)
+	def get_total_tax
+		calculate_total_tax(get_sale_tax, get_import_duty_tax)
 	end
 
-	def calculate_total_price
-		(@price * @quantity)
+	def get_total_price
+		(((@price * @quantity))+get_total_tax).round(2)
 	end
 end
