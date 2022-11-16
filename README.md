@@ -2,10 +2,13 @@
 
 This is a template to get you started with Ruby on Replit. It's ready to go so you can just hit run and start coding!
 
-## Running the repl
+[Public Link](https://replit.com/&#64;matedemorphy/torcchallenge-1)
 
-Simply hit run! You can edit the run command from the `.replit` file.
+## Running locally
 
+    git clone https://github.com/matedemorphy/torc_challenge.git
+	bundle install
+    ruby main.rb
 ## Installing packages
 
 To add packages to your repl, we recommend using the Replit packager interface in the left sidebar or using `bundle install` in the shell. Check out the [Bundle docs here](https://bundler.io/v2.3/#getting-started).
