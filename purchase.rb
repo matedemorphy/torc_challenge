@@ -1,8 +1,12 @@
 require "./file_reader"
+require "./map_file_helper"
 require "./item"
+require "./format_helper"
 
 class Purchase
 	include FileReader
+	include FormatHelper
+	include MapFileHelper
 	
 	attr_accessor :input_number, :items, :details
 	
@@ -13,55 +17,27 @@ class Purchase
 	end
 
 	def get_items
-		read_file("input#{@input_number}.txt")
-		#a = read_file("input#{@input_number}.txt")
-		#if a.is_a? String
-		#	abort a
-		#end
-		items_file = map_file
-		items_obj = []
-		
-		items_file.each do |item|
-			items_obj.push(Item.new(
-				item[:name], 
-				item[:imported], 
-				item[:tax], 
-				item[:quantity],
-				item[:price]))
+		lines = read_file("input#{@input_number}.txt")
+
+		create_list(lines).map do |line|
+			Item.new(line[:name], line[:imported], line[:tax], line[:quantity], line[:price])
 		end
-		
-		items_obj
 	end
 
 	def generate_receipt_item_list
 		@items.each do |item|
-			@details.push([
-				"#{item.quantity}",
-				(item.imported ? " imported " : " "),
-				"#{item.name}: ",
-				'%.2f' % item.get_total_price
-			].join)
+			add_details(format_receipt_item_list(item.quantity, item.imported, 													item.name, item.get_total_price))
 		end
 	end
 
 	def generate_receipt_total_tax
-		tax = 0.00
-		@items.each do |item|
-			tax += item.get_total_tax
-		end
-		@details.push(
-			"Sales Taxes: #{'%.2f' % tax}"
-		)
+		tax = calculate_total("get_total_tax")
+		add_details(format_receipt_total_tax(tax))
 	end
 
 	def generate_receipt_total_sales
-		total = 0.00
-		@items.each do |item|
-			total += item.get_total_price
-		end
-		@details.push(
-			"Total: #{total}"
-		)
+		total = calculate_total("get_total_price")
+		add_details(format_receipt_total_sales(total))
 	end
 
 	def generate_receipt_details
@@ -70,5 +46,17 @@ class Purchase
 		generate_receipt_total_sales
 		@details.unshift("Output #{@input_number}:")
 		@details
+	end
+	
+	private
+	
+	def add_details(detail)
+		@details.push(detail)
+	end
+
+	def calculate_total(method)
+		total = 0.00
+		@items.each { |item| total += item.send(method) }
+		total
 	end
 end

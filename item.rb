@@ -1,7 +1,7 @@
-require "./helper"
+require "./tax_helper"
 
 class Item
-	include Helper
+	include TaxHelper
 	
 	attr_accessor :quantity, :name, :imported, :tax, :price
 	
@@ -13,16 +13,8 @@ class Item
 		@price = price.to_f
 	end
 
-	def get_import_duty_tax
-		@imported ? calculate_import_duty_tax(@price, @quantity) : 0.00
-	end
-
-	def get_sale_tax
-		@tax ? calculate_sale_tax(@price, @quantity) : 0.00
-	end
-
 	def get_total_tax
-		calculate_total_tax(get_sale_tax, get_import_duty_tax)
+		calculate_total_tax(@price, @quantity, @tax, @imported)
 	end
 
 	def get_total_price
