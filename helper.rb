@@ -16,6 +16,7 @@ module Helper
 	end
 
 	def calculate_total_tax(sale_tax, import_duty_tax)
-		round_to_nearest((get_sale_tax + get_import_duty_tax))
+		get_sale_tax + get_import_duty_tax
+		# BigDecimal((get_sale_tax + get_import_duty_tax).to_s).round(2)
 	end
 end
